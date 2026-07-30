@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test your typing speed and accuracy with this interactive Typing Speed Test. Measure WPM, track errors, and improve your typing skills.">
+    <title>TypeRush — Typing Speed Test</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Background Orbs -->
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header id="app-header" class="header">
+            <div class="logo">
+                <span class="logo-icon">⌨</span>
+                <h1>Type<span class="logo-accent">Rush</span></h1>
+            </div>
+            <p class="tagline">Test your speed. Master your keys.</p>
+        </header>
+
+        <!-- Stats Bar -->
+        <section id="stats-bar" class="stats-bar">
+            <div class="stat-card" id="stat-wpm">
+                <div class="stat-value" id="wpm-value">0</div>
+                <div class="stat-label">WPM</div>
+            </div>
+            <div class="stat-card" id="stat-accuracy">
+                <div class="stat-value" id="accuracy-value">100<span class="stat-unit">%</span></div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+            <div class="stat-card stat-card-timer" id="stat-timer">
+                <div class="stat-value" id="timer-value">60</div>
+                <div class="stat-label">Seconds</div>
+            </div>
+            <div class="stat-card" id="stat-errors">
+                <div class="stat-value" id="errors-value">0</div>
+                <div class="stat-label">Errors</div>
+            </div>
+        </section>
+
+        <!-- Timer Duration Selector -->
+        <section id="timer-selector" class="timer-selector">
+            <span class="selector-label">Duration:</span>
+            <button class="timer-btn" data-time="15">15s</button>
+            <button class="timer-btn" data-time="30">30s</button>
+            <button class="timer-btn active" data-time="60">60s</button>
+            <button class="timer-btn" data-time="120">120s</button>
+        </section>
+
+        <!-- Text Display Area -->
+        <section id="text-display" class="text-display">
+            <div id="text-content" class="text-content">
+                <!-- Characters will be rendered here by JS -->
+            </div>
+        </section>
+
+        <!-- Input Area -->
+        <div class="input-wrapper">
+            <textarea id="typing-input" class="typing-input" placeholder="Click here and start typing..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button id="restart-btn" class="btn btn-restart">
+                <span class="btn-icon">↺</span> Restart
+            </button>
+            <button id="new-text-btn" class="btn btn-new-text">
+                <span class="btn-icon">✦</span> New Text
+            </button>
+        </div>
+
+        <!-- Results Modal -->
+        <div id="results-overlay" class="results-overlay hidden">
+            <div id="results-modal" class="results-modal">
+                <div class="results-header">
+                    <h2>🏆 Results</h2>
+                    <p class="results-subtitle">Here's how you performed</p>
+                </div>
+                <div class="results-grid">
+                    <div class="result-item result-wpm">
+                        <div class="result-big" id="result-wpm">0</div>
+                        <div class="result-label">Words Per Minute</div>
+                    </div>
+                    <div class="result-item result-acc">
+                        <div class="result-big" id="result-accuracy">0%</div>
+                        <div class="result-label">Accuracy</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-big" id="result-correct">0</div>
+                        <div class="result-label">Correct Characters</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-big" id="result-wrong">0</div>
+                        <div class="result-label">Wrong Characters</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-big" id="result-total">0</div>
+                        <div class="result-label">Total Characters</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-big" id="result-raw-wpm">0</div>
+                        <div class="result-label">Raw WPM</div>
+                    </div>
+                </div>
+                <div class="result-rank" id="result-rank"></div>
+                <button id="results-restart-btn" class="btn btn-restart btn-large">
+                    <span class="btn-icon">↺</span> Try Again
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Press <kbd>Tab</kbd> + <kbd>Enter</kbd> to restart quickly</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
