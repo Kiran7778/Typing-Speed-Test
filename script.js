@@ -21,10 +21,15 @@
         "The city never sleeps, its streets alive with the hum of traffic and the glow of neon lights. Every corner holds a story, every building a history, and every person a dream waiting to unfold beneath the stars."
     ];
 
+    // Reference ceiling for the WPM gauge sweep — 150 wpm covers
+    // all but the most extreme results while keeping the dial legible.
+    const GAUGE_MAX_WPM = 150;
+
     // --- DOM Elements ---
     const textContent = document.getElementById("text-content");
     const typingInput = document.getElementById("typing-input");
     const wpmValue = document.getElementById("wpm-value");
+    const wpmGauge = document.getElementById("wpm-gauge");
     const accuracyValue = document.getElementById("accuracy-value");
     const timerValue = document.getElementById("timer-value");
     const errorsValue = document.getElementById("errors-value");
@@ -35,6 +40,7 @@
     const resultsOverlay = document.getElementById("results-overlay");
     const resultsRestartBtn = document.getElementById("results-restart-btn");
     const textDisplay = document.getElementById("text-display");
+    const statusLed = document.getElementById("status-led");
 
     // Results elements
     const resultWpm = document.getElementById("result-wpm");
@@ -108,6 +114,7 @@
 
         // Reset stats display
         wpmValue.textContent = "0";
+        setGaugePercent(0);
         accuracyValue.innerHTML = '100<span class="stat-unit">%</span>';
         errorsValue.textContent = "0";
 
@@ -123,8 +130,9 @@
         // Hide results
         resultsOverlay.classList.add("hidden");
 
-        // Reset text display focus style
+        // Reset text display focus style and status LED
         textDisplay.classList.remove("focused");
+        setStatusLed("idle");
     }
 
     // --- Event Listeners ---
@@ -188,6 +196,7 @@
             startTimer();
             isRunning = true;
             startTime = Date.now();
+            setStatusLed("active");
         }
 
         // Reset counters for recalculation
@@ -245,6 +254,26 @@
         }, 1000);
     }
 
+    // --- Gauge & Status LED ---
+    function setGaugePercent(wpm) {
+        const pct = Math.max(0, Math.min(100, Math.round((wpm / GAUGE_MAX_WPM) * 100)));
+        wpmGauge.style.setProperty("--pct", pct);
+        wpmGauge.setAttribute("aria-valuenow", Math.max(0, wpm));
+    }
+
+    function setStatusLed(state) {
+        statusLed.classList.remove("is-active", "is-done");
+        if (state === "active") {
+            statusLed.textContent = "Recording";
+            statusLed.classList.add("is-active");
+        } else if (state === "done") {
+            statusLed.textContent = "Complete";
+            statusLed.classList.add("is-done");
+        } else {
+            statusLed.textContent = "Idle";
+        }
+    }
+
     // --- Stats ---
     function updateStats() {
         if (!startTime) return;
@@ -255,8 +284,9 @@
         if (elapsedMin <= 0) return;
 
         // WPM: (correct characters / 5) / elapsed minutes
-        const wpm = Math.round((correctChars / 5) / elapsedMin);
-        wpmValue.textContent = Math.max(0, wpm);
+        const wpm = Math.max(0, Math.round((correctChars / 5) / elapsedMin));
+        wpmValue.textContent = wpm;
+        setGaugePercent(wpm);
 
         // Accuracy
         const accuracy = totalTyped > 0
@@ -275,6 +305,7 @@
         clearInterval(timerInterval);
         timerCard.classList.remove("running");
         typingInput.disabled = true;
+        setStatusLed("done");
 
         const elapsedMs = Date.now() - startTime;
         const elapsedMin = elapsedMs / 60000;
@@ -291,29 +322,29 @@
         resultTotal.textContent = totalTyped;
         resultRawWpm.textContent = Math.max(0, rawWpm);
 
-        // Rank
+        // Rank — telemetry-style performance tier, no decoration needed
+        let tier = "";
         let rankText = "";
-        let rankEmoji = "";
         if (wpm >= 100) {
-            rankEmoji = "⚡";
-            rankText = "Legendary — You're a typing machine!";
+            tier = "S";
+            rankText = "Elite pace — top-tier control at speed.";
         } else if (wpm >= 80) {
-            rankEmoji = "🔥";
-            rankText = "Expert — Blazing fast fingers!";
+            tier = "A";
+            rankText = "Excellent — fast and highly accurate.";
         } else if (wpm >= 60) {
-            rankEmoji = "🚀";
-            rankText = "Advanced — Great speed and control!";
+            tier = "B";
+            rankText = "Strong, race-ready pace.";
         } else if (wpm >= 40) {
-            rankEmoji = "💪";
-            rankText = "Intermediate — Solid performance!";
+            tier = "C";
+            rankText = "Solid and consistent.";
         } else if (wpm >= 20) {
-            rankEmoji = "🌱";
-            rankText = "Beginner — Keep practicing!";
+            tier = "D";
+            rankText = "Building speed — keep at it.";
         } else {
-            rankEmoji = "🐢";
-            rankText = "Warming Up — You'll get faster!";
+            tier = "E";
+            rankText = "Warm-up lap — you'll get faster.";
         }
-        resultRank.innerHTML = `${rankEmoji} ${rankText}`;
+        resultRank.innerHTML = `<strong>Tier ${tier}</strong> — ${rankText}`;
 
         // Show results with slight delay for animation
         setTimeout(() => {
