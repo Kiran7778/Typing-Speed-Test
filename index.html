@@ -7,30 +7,44 @@
     <title>TypeRush — Typing Speed Test</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Animated Background Orbs -->
-    <div class="bg-orb bg-orb-1"></div>
-    <div class="bg-orb bg-orb-2"></div>
-    <div class="bg-orb bg-orb-3"></div>
-
     <div class="app-container">
         <!-- Header -->
         <header id="app-header" class="header">
+            <p class="header-eyebrow">Precision Typing Instrument</p>
             <div class="logo">
-                <span class="logo-icon">⌨</span>
                 <h1>Type<span class="logo-accent">Rush</span></h1>
             </div>
             <p class="tagline">Test your speed. Master your keys.</p>
         </header>
 
         <!-- Stats Bar -->
-        <section id="stats-bar" class="stats-bar">
-            <div class="stat-card" id="stat-wpm">
-                <div class="stat-value" id="wpm-value">0</div>
-                <div class="stat-label">WPM</div>
+        <section id="stats-bar" class="stats-bar" aria-label="Live session stats">
+            <div class="gauge-card" id="stat-wpm">
+                <div class="gauge-ring" id="wpm-gauge" role="meter" aria-valuemin="0" aria-valuemax="150" aria-valuenow="0" aria-label="Words per minute">
+                    <div class="gauge-ring-fill"></div>
+                    <div class="gauge-ring-ticks" aria-hidden="true">
+                        <span class="gauge-tick" style="--tick-index: 0"></span>
+                        <span class="gauge-tick" style="--tick-index: 1"></span>
+                        <span class="gauge-tick" style="--tick-index: 2"></span>
+                        <span class="gauge-tick" style="--tick-index: 3"></span>
+                        <span class="gauge-tick" style="--tick-index: 4"></span>
+                        <span class="gauge-tick" style="--tick-index: 5"></span>
+                        <span class="gauge-tick" style="--tick-index: 6"></span>
+                        <span class="gauge-tick" style="--tick-index: 7"></span>
+                        <span class="gauge-tick" style="--tick-index: 8"></span>
+                        <span class="gauge-tick" style="--tick-index: 9"></span>
+                        <span class="gauge-tick" style="--tick-index: 10"></span>
+                        <span class="gauge-tick" style="--tick-index: 11"></span>
+                    </div>
+                    <div class="gauge-ring-face">
+                        <span class="gauge-value" id="wpm-value">0</span>
+                        <span class="gauge-label">WPM</span>
+                    </div>
+                </div>
             </div>
             <div class="stat-card" id="stat-accuracy">
                 <div class="stat-value" id="accuracy-value">100<span class="stat-unit">%</span></div>
@@ -57,6 +71,10 @@
 
         <!-- Text Display Area -->
         <section id="text-display" class="text-display">
+            <div class="text-display-bar">
+                <span class="text-display-label">Text Module</span>
+                <span class="status-led" id="status-led">Idle</span>
+            </div>
             <div id="text-content" class="text-content">
                 <!-- Characters will be rendered here by JS -->
             </div>
@@ -64,6 +82,7 @@
 
         <!-- Input Area -->
         <div class="input-wrapper">
+            <label for="typing-input" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Typing input</label>
             <textarea id="typing-input" class="typing-input" placeholder="Click here and start typing..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
         </div>
 
@@ -78,10 +97,11 @@
         </div>
 
         <!-- Results Modal -->
-        <div id="results-overlay" class="results-overlay hidden">
+        <div id="results-overlay" class="results-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="results-heading">
             <div id="results-modal" class="results-modal">
                 <div class="results-header">
-                    <h2>🏆 Results</h2>
+                    <p class="header-eyebrow">Session Telemetry</p>
+                    <h2 id="results-heading">Results</h2>
                     <p class="results-subtitle">Here's how you performed</p>
                 </div>
                 <div class="results-grid">
